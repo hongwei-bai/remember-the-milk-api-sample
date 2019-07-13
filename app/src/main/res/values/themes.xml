@@ -12,8 +12,12 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
-    <style name="Theme.App.Home" parent="Theme.App">
+    <style name="Theme.App.Main" parent="Theme.App">
         <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.App.Web" parent="Theme.App">
+        <item name="android:statusBarColor">@color/colorAccent</item>
     </style>
 
     <!-- Buttons -->
