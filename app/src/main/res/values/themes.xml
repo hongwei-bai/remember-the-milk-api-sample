@@ -1,0 +1,29 @@
+<resources>
+
+    <style name="Theme.App.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="buttonStyle">@style/Button.Primary</item>
+    </style>
+
+    <style name="Theme.App" parent="Theme.App.Base">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.App.Home" parent="Theme.App">
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Button.Primary" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:height">44dp</item>
+        <item name="android:elevation">0dp</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+</resources>
