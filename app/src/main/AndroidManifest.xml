@@ -39,6 +39,8 @@
             android:theme="@style/Theme.App.Web"
             android:windowSoftInputMode="adjustResize">
         </activity>
+
+        <receiver android:name=".presentation.alarm.AlarmReceiver"/>
     </application>
 
 </manifest>

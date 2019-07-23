@@ -117,7 +117,7 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
         val stringBuilder = StringBuilder("Summary for today ($formatedDateString)")
         for (task in dueTasks) {
-            stringBuilder.append("\n>${task.name}")
+            stringBuilder.append("\n>$task")
         }
         return stringBuilder.toString()
     }
