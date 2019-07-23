@@ -7,7 +7,8 @@ import com.hongwei.remember_the_milk_api_sample.injection.annotations.PerScreen
 import com.hongwei.remember_the_milk_api_sample.injection.modules.ActivityModule
 import com.hongwei.remember_the_milk_api_sample.injection.modules.ViewModelModule
 import com.hongwei.remember_the_milk_api_sample.presentation.main.MainActivity
-import com.hongwei.remember_the_milk_api_sample.presentation.webview.WebViewActivity
+import com.hongwei.remember_the_milk_api_sample.presentation.webview.AuthenticationWebViewActivity
+import com.hongwei.remember_the_milk_api_sample.presentation.webview.RegisterWebViewActivity
 import dagger.Component
 
 @PerScreen
@@ -21,5 +22,7 @@ interface ActivityComponent : Singletons {
 
     fun inject(mainActivity: MainActivity)
 
-    fun inject(webViewActivity: WebViewActivity)
+    fun inject(registerWebViewActivity: RegisterWebViewActivity)
+
+    fun inject(authenticationWebViewActivity: AuthenticationWebViewActivity)
 }

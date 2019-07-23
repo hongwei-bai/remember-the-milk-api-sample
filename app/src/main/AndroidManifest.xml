@@ -27,7 +27,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.webview.WebViewActivity"
+            android:name=".presentation.webview.RegisterWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Web"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".presentation.webview.AuthenticationWebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.App.Web"
             android:windowSoftInputMode="adjustResize">
