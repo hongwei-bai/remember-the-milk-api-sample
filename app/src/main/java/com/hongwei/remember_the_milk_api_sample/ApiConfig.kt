@@ -28,4 +28,21 @@ object ApiConfig {
         const val API_KEY = "28c5974a50066a0b200bec226e91179f"
         const val SHARED_SECRET = "fdde1ce02f803273"
     }
+
+    object Timing {
+        const val WAKE_UP_HOUR = 7
+
+        const val SUMMARY_HOUR = 10
+    }
+
+    object Alarm {
+        object Type {
+            const val KEY_TYPE = "alarm.type"
+            const val KEY_NAME = "alarm.name"
+
+            const val WAKE_UP = "wakeup"
+            const val SUMMARY = "summary"
+            const val TODO = "todo"
+        }
+    }
 }

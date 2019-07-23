@@ -1,4 +1,4 @@
-package com.hongwei.remember_the_milk_api_sample.domain
+package com.hongwei.remember_the_milk_api_sample.domain.usecase
 
 import android.util.Log
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.AppString.TAG_DOC
@@ -32,9 +32,9 @@ class GetDocTasksUseCase @Inject constructor(val dataSource: DataSource) {
                 for (task in tasks) {
                     if (task.name == ">>>git opr") {
                         Log.i(TAG, "tags: ${Arrays.toString(task.tags)}")
-//                        for (note in task.notes) {
-//                            Log.i(TAG, "note: $note")
-//                        }
+                        for (note in task.notes) {
+                            Log.i(TAG, "note: $note")
+                        }
                     }
                 }
             }

@@ -1,8 +1,9 @@
-package com.hongwei.remember_the_milk_api_sample.domain
+package com.hongwei.remember_the_milk_api_sample.domain.usecase
 
 import android.util.Log
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.AppString.LIST_ALL_TASKS
 import com.hongwei.remember_the_milk_api_sample.data.DataSource
+import com.hongwei.remember_the_milk_api_sample.domain.model.DueTask
 import it.bova.rtmapi.RtmApi
 import java.util.*
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.due-task.usecase"
     }
 
-    fun execute(apiKey: String, sharedSecret: String) {
+    fun execute(apiKey: String, sharedSecret: String): List<DueTask> {
         val authToken = dataSource.retriveToken()
         Log.i(TAG, "authToken: $authToken")
         val api = RtmApi(apiKey, sharedSecret, authToken)
@@ -28,6 +29,7 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
 //        Log.i(TAG, "tomorrow0: $tomorrow0")
 
         val lists = api.listsGetList()
+        val dueTaskList = mutableListOf<DueTask>()
         for (list in lists) {
 //            val tasksInList = api.tasksGetByList(list)
 //            count += tasksInList.size
@@ -47,10 +49,12 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
 
                     if (taskDueDate.after(today0) && taskDueDate.before(tomorrow0)) {
                         Log.i(TAG, "[TODAY]task: ${task.name}, due: ${task.due}")
+                        dueTaskList.add(DueTask(task.name, task.due))
                     }
                 }
             }
         }
         Log.i(TAG, "-- end --")
+        return dueTaskList
     }
 }
