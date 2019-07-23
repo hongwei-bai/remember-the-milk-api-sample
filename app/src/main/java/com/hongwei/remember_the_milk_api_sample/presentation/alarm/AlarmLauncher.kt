@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Alarm.Type.KEY_NAME
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Alarm.Type.KEY_TYPE
@@ -26,7 +27,7 @@ class AlarmLauncher {
             val calendar = Calendar.getInstance()
             calendar.time = date
 
-            Log.i(TAG, "add alarm: type: $type, date: $calendar")
+            Log.i(TAG, "add alarm: type: $type, time: ${DateFormat.format("dd-MM-yyyy HH:mm:ss", calendar)}")
 
             // register new alarm
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
