@@ -19,6 +19,11 @@ object ApiConfig {
         const val RESULT_CODE_SUCCESS = 944
     }
 
+    object AppString {
+        const val LIST_ALL_TASKS = "所有任务"
+        const val TAG_DOC = "doc"
+    }
+
     object Cridentials {
         const val API_KEY = "28c5974a50066a0b200bec226e91179f"
         const val SHARED_SECRET = "fdde1ce02f803273"

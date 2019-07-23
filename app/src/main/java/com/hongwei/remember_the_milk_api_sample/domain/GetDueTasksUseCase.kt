@@ -1,6 +1,7 @@
 package com.hongwei.remember_the_milk_api_sample.domain
 
 import android.util.Log
+import com.hongwei.remember_the_milk_api_sample.ApiConfig.AppString.LIST_ALL_TASKS
 import com.hongwei.remember_the_milk_api_sample.data.DataSource
 import it.bova.rtmapi.RtmApi
 import java.util.*
@@ -12,31 +13,44 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
     }
 
     fun execute(apiKey: String, sharedSecret: String) {
-        Log.i(TAG, "dataSource.authToken: ${dataSource.authToken}")
-        val api = RtmApi(apiKey, sharedSecret, dataSource.authToken)
+        val authToken = dataSource.retriveToken()
+        Log.i(TAG, "authToken: $authToken")
+        val api = RtmApi(apiKey, sharedSecret, authToken)
 
-        val t0 = System.currentTimeMillis()
+        val yesterday = Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24))
+        val today = Date()
+        val today0 = Date(today.year, today.month, today.date)
+        val tomorrow0 = Date(today0.time + (1000 * 60 * 60 * 24))
+
+//        Log.i(TAG, "yesterday: $yesterday")
+//        Log.i(TAG, "today: $today")
+//        Log.i(TAG, "today0: $today0")
+//        Log.i(TAG, "tomorrow0: $tomorrow0")
+
         val lists = api.listsGetList()
-        Log.i(TAG, "listsGetList use: ${System.currentTimeMillis() - t0}")
         for (list in lists) {
 //            val tasksInList = api.tasksGetByList(list)
 //            count += tasksInList.size
 //            Log.i(TAG, "list: ${list.name}, size: ${tasksInList.size}")
+//            Log.i(TAG, "list: ${list.name}")
+            if (list.isArchived || list.isDeleted || list.name == LIST_ALL_TASKS) {
+                continue
+            }
 
-            if (list.name == "doc") {
-                val t1 = System.currentTimeMillis()
-                val tasks = api.tasksGetByList(list)
-                Log.i(TAG, "tasksGetByList use: ${System.currentTimeMillis() - t1}")
-                for (task in tasks) {
-                    if (task.name == ">>>git opr") {
-                        Log.i(TAG, "tags: ${Arrays.toString(task.tags)}")
-//                        for (note in task.notes) {
-//                            Log.i(TAG, "note: $note")
-//                        }
+            val tasks = api.tasksGetByList(list)
+
+            for (task in tasks) {
+                task.due?.let { taskDueDate ->
+                    if (taskDueDate.after(tomorrow0)) {
+                        Log.i(TAG, "task: ${task.name}, due: ${task.due}")
+                    }
+
+                    if (taskDueDate.after(today0) && taskDueDate.before(tomorrow0)) {
+                        Log.i(TAG, "[TODAY]task: ${task.name}, due: ${task.due}")
                     }
                 }
             }
         }
-
+        Log.i(TAG, "-- end --")
     }
 }

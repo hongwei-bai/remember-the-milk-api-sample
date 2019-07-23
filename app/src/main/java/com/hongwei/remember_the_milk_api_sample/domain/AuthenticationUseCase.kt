@@ -16,9 +16,9 @@ class AuthenticationUseCase @Inject constructor(val dataSource: DataSource) {
         dataSource.authenticator = RtmApiAuthenticator(apiKey, sharedSecret)
 
         dataSource.authenticator?.apply {
-            dataSource.authToken = dataSource.retriveToken()
-            Log.i(TAG, "retrive token: ${dataSource.authToken}")
-            if (dataSource.authToken == null) {
+            val authToken = dataSource.retriveToken()
+            Log.i(TAG, "retrive token: $authToken")
+            if (authToken == null) {
                 dataSource.frob = authGetFrob()
                 Log.i(TAG, "frob: ${dataSource.frob}")
                 val validationUrl = authGetDesktopUrl(Permission.READ, dataSource.frob)
@@ -26,7 +26,7 @@ class AuthenticationUseCase @Inject constructor(val dataSource: DataSource) {
                 return validationUrl
             } else {
                 val gson = Gson()
-                val json = gson.toJson(dataSource.authToken)
+                val json = gson.toJson(authToken)
                 Log.i(TAG, "token.display: $json")
                 return null
             }
@@ -39,11 +39,10 @@ class AuthenticationUseCase @Inject constructor(val dataSource: DataSource) {
             try {
                 Log.i(TAG, "frob: ${dataSource.frob}")
 
-                dataSource.authToken = authGetToken(dataSource.frob)
-                Log.i(TAG, "authToken: ${dataSource.authToken}")
+                val authToken = authGetToken(dataSource.frob)
+                Log.i(TAG, "authToken: $authToken")
 
-                dataSource.saveToken(dataSource.authToken!!)
-                Log.i(TAG, "authToken: ${dataSource.authToken}")
+                dataSource.saveToken(authToken!!)
             } catch (e: Exception) {
                 Log.i(TAG, "catch exception: $e")
                 return false

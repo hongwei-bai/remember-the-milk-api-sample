@@ -4,10 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Constants.REQUEST_CODE_AUTH
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Cridentials.API_KEY
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Cridentials.SHARED_SECRET
-import com.hongwei.remember_the_milk_api_sample.domain.AuthenticationUseCase
-import com.hongwei.remember_the_milk_api_sample.domain.CheckAuthenticationStatusUseCase
-import com.hongwei.remember_the_milk_api_sample.domain.GetDueTasksUseCase
-import com.hongwei.remember_the_milk_api_sample.domain.RegisterUseCase
+import com.hongwei.remember_the_milk_api_sample.domain.*
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseViewModel
 import com.hongwei.remember_the_milk_api_sample.presentation.model.ViewState
@@ -23,6 +20,9 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     @Inject
     lateinit var authenticationUseCase: AuthenticationUseCase
+
+    @Inject
+    lateinit var getDocTasksUseCase: GetDocTasksUseCase
 
     @Inject
     lateinit var getDueTasksUseCase: GetDueTasksUseCase
@@ -62,6 +62,12 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
             result = authenticationUseCase.execute()
         }
         authenticationState.value = result
+    }
+
+    fun getDocumentTask() {
+        GlobalScope.launch(Dispatchers.IO) {
+            getDocTasksUseCase.execute(API_KEY, SHARED_SECRET)
+        }
     }
 
     fun getDueTask() {

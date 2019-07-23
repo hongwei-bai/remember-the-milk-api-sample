@@ -19,8 +19,6 @@ class DataSource @Inject constructor(@AppContext context: Context) {
 
     var frob: String? = null
 
-    var authToken: Token? = null
-
     fun saveToken(token: Token) {
         val editor = sharedPreferences.edit()
         val gson = Gson()
