@@ -39,6 +39,12 @@
             android:theme="@style/Theme.App.Web"
             android:windowSoftInputMode="adjustResize">
         </activity>
+        <activity
+            android:name=".presentation.main.ApiConfigActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.App.Main"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
 
         <receiver android:name=".presentation.alarm.AlarmReceiver"/>
     </application>

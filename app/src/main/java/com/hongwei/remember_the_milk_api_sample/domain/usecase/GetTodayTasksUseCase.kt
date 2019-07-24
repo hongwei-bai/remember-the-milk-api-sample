@@ -8,7 +8,7 @@ import it.bova.rtmapi.RtmApi
 import java.util.*
 import javax.inject.Inject
 
-class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
+class GetTodayTasksUseCase @Inject constructor(val dataSource: DataSource) {
     companion object {
         const val TAG = "rtm.due-task.usecase"
     }
@@ -21,7 +21,7 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
         val yesterday = Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24))
         val now = Date()
         val today = Date(now.year, now.month, now.date)
-        val tomorrow = Date(today.time + (1000 * 60 * 60 * 24))
+        val tomorrow0 = Date(today.time + (1000 * 60 * 60 * 24))
 
 //        Log.i(TAG, "yesterday: $yesterday")
 //        Log.i(TAG, "today: $today")
@@ -43,7 +43,7 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
 
             for (task in tasks) {
                 task.due?.let { taskDueDate ->
-                    if (taskDueDate.after(now) && taskDueDate.before(tomorrow)) {
+                    if (taskDueDate.after(today) && taskDueDate.before(tomorrow0)) {
                         Log.i(TAG, "[TODAY]task: ${task.name}, due: ${task.due}")
                         dueTaskList.add(DueTask(task.name, task.due))
                     }

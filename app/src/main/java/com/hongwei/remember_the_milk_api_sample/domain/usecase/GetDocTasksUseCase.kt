@@ -12,10 +12,10 @@ class GetDocTasksUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.doc-task.usecase"
     }
 
-    fun execute(apiKey: String, sharedSecret: String) {
+    fun execute() {
         val authToken = dataSource.retriveToken()
         Log.i(TAG, "authToken: $authToken")
-        val api = RtmApi(apiKey, sharedSecret, authToken)
+        val api = RtmApi(dataSource.apiKey, dataSource.sharedSecret, authToken)
 
         val t0 = System.currentTimeMillis()
         val lists = api.listsGetList()

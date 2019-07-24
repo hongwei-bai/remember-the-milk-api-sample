@@ -6,6 +6,7 @@ import com.hongwei.remember_the_milk_api_sample.injection.annotations.ActivityCo
 import com.hongwei.remember_the_milk_api_sample.injection.annotations.PerScreen
 import com.hongwei.remember_the_milk_api_sample.injection.modules.ActivityModule
 import com.hongwei.remember_the_milk_api_sample.injection.modules.ViewModelModule
+import com.hongwei.remember_the_milk_api_sample.presentation.main.ApiConfigActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.main.MainActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.webview.AuthenticationWebViewActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.webview.RegisterWebViewActivity
@@ -25,4 +26,6 @@ interface ActivityComponent : Singletons {
     fun inject(registerWebViewActivity: RegisterWebViewActivity)
 
     fun inject(authenticationWebViewActivity: AuthenticationWebViewActivity)
+
+    fun inject(apiConfigActivity: ApiConfigActivity)
 }

@@ -12,8 +12,10 @@ class AuthenticationUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.auth.usecase"
     }
 
-    fun prepare(apiKey: String, sharedSecret: String): String? {
-        dataSource.authenticator = RtmApiAuthenticator(apiKey, sharedSecret)
+    fun prepare(): String? {
+        Log.i("aaaa", "dataSource: $dataSource")
+        Log.i(TAG, "RtmApiAuthenticator: apiKey: ${dataSource.apiKey}, sharedSecret: ${dataSource.sharedSecret}")
+        dataSource.authenticator = RtmApiAuthenticator(dataSource.apiKey, dataSource.sharedSecret)
 
         dataSource.authenticator?.apply {
             val authToken = dataSource.retriveToken()

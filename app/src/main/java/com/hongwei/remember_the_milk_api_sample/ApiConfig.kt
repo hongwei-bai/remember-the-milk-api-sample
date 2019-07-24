@@ -14,19 +14,26 @@ object ApiConfig {
 
     object Constants {
         const val REQUEST_CODE_AUTH = 442
+        const val REQUEST_CODE_APICONFIG = 443
 
         const val RESULT_CODE_FAILURE = 0
         const val RESULT_CODE_SUCCESS = 944
     }
 
+    object Validation {
+        const val LENGTH_API_KEY = 32
+        const val LENGTH_SHARED_SECRET = 16
+    }
+
+    object DataStoreKey {
+        const val KEY_TOKEN = "token"
+        const val KEY_API_KEY = "apikey"
+        const val KEY_SHARED_SECRET = "sharedsecret"
+    }
+
     object AppString {
         const val LIST_ALL_TASKS = "所有任务"
         const val TAG_DOC = "doc"
-    }
-
-    object Cridentials {
-        const val API_KEY = "28c5974a50066a0b200bec226e91179f"
-        const val SHARED_SECRET = "fdde1ce02f803273"
     }
 
     object Timing {

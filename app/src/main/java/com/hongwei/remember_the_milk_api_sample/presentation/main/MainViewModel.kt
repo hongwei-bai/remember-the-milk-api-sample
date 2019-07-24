@@ -1,11 +1,8 @@
 package com.hongwei.remember_the_milk_api_sample.presentation.main
 
-import android.text.format.DateFormat
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Constants.REQUEST_CODE_AUTH
-import com.hongwei.remember_the_milk_api_sample.ApiConfig.Cridentials.API_KEY
-import com.hongwei.remember_the_milk_api_sample.ApiConfig.Cridentials.SHARED_SECRET
 import com.hongwei.remember_the_milk_api_sample.domain.model.DueTask
 import com.hongwei.remember_the_milk_api_sample.domain.usecase.*
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseActivity
@@ -13,13 +10,15 @@ import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseViewModel
 import com.hongwei.remember_the_milk_api_sample.presentation.model.ViewState
 import com.hongwei.remember_the_milk_api_sample.presentation.webview.AuthenticationWebViewActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.webview.RegisterWebViewActivity
+import com.hongwei.remember_the_milk_api_sample.util.toddMMMyyyy
+import com.hongwei.remember_the_milk_api_sample.util.toddMMyyyy_HHmmss
 import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor() : BaseViewModel() {
     companion object {
-        const val TAG = "rtm.main-viewmodel"
+        const val TAG = "rtm.main.viewmodel"
     }
 
     @Inject
@@ -35,16 +34,33 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     lateinit var getDueTasksUseCase: GetDueTasksUseCase
 
     @Inject
+    lateinit var getTodayTasksUseCase: GetTodayTasksUseCase
+
+    @Inject
     lateinit var checkAuthenticationStatusUseCase: CheckAuthenticationStatusUseCase
 
     @Inject
     lateinit var setAlarmUseCase: SetAlarmUseCase
+
+    @Inject
+    lateinit var getNextAlarmUseCase: GetNextAlarmUseCase
+
+    @Inject
+    lateinit var checkApiConfigUseCase: CheckApiConfigUseCase
 
     val viewState: MutableLiveData<ViewState> = MutableLiveData()
 
     val authenticationState: MutableLiveData<Boolean> = MutableLiveData()
 
     val summaryState: MutableLiveData<String> = MutableLiveData()
+
+    val dueSummaryState: MutableLiveData<String> = MutableLiveData()
+
+    val nextAlarmState: MutableLiveData<String> = MutableLiveData()
+
+    fun checkApiConfigExist(): Boolean {
+        return checkApiConfigUseCase.execute()
+    }
 
     fun checkAuthenticationStatus(): Boolean {
         val success = checkAuthenticationStatusUseCase.execute()
@@ -55,7 +71,7 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     fun authenticate(activity: BaseActivity) {
         GlobalScope.launch(Dispatchers.IO) {
             val deferred = async {
-                authenticationUseCase.prepare(API_KEY, SHARED_SECRET)
+                authenticationUseCase.prepare()
             }
             val validationUrl = deferred.await()
             if (validationUrl != null) {
@@ -78,7 +94,7 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     fun getDocumentTask() {
         GlobalScope.launch(Dispatchers.IO) {
-            getDocTasksUseCase.execute(API_KEY, SHARED_SECRET)
+            getDocTasksUseCase.execute()
         }
     }
 
@@ -86,15 +102,45 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         var dueTasks: List<DueTask> = emptyList()
 
         runBlocking(Dispatchers.IO) {
-            dueTasks = getDueTasksUseCase.execute(API_KEY, SHARED_SECRET)
+            dueTasks = getDueTasksUseCase.execute()
         }
 
-        val summary = getSummaryString(dueTasks)
+        val summary = getDueSummaryString(dueTasks)
+        Log.i(TAG, "due summary: $summary")
+
+        GlobalScope.launch(Dispatchers.Main) { dueSummaryState.value = summary }
+
+        return dueTasks
+    }
+
+    fun getTodayTask(): List<DueTask> {
+        var todayTasks: List<DueTask> = emptyList()
+
+        runBlocking(Dispatchers.IO) {
+            todayTasks = getTodayTasksUseCase.execute()
+        }
+
+        val summary = getSummaryString(todayTasks)
         Log.i(TAG, "summary: $summary")
 
         GlobalScope.launch(Dispatchers.Main) { summaryState.value = summary }
 
-        return dueTasks
+        return todayTasks
+    }
+
+    fun getNextAlarm() {
+        val calendar = getNextAlarmUseCase.execute()
+
+        val text: String
+        if (null == calendar) {
+            text = "No incoming alarm."
+        } else {
+            text = "Next alarm: \n" + calendar.toddMMyyyy_HHmmss()
+        }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            nextAlarmState.value = text
+        }
     }
 
     fun setAlarms(dueTasks: List<DueTask>) {
@@ -111,13 +157,22 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         }
     }
 
-    private fun getSummaryString(dueTasks: List<DueTask>): String {
+    private fun getDueSummaryString(dueTasks: List<DueTask>): String {
         val calendar = Calendar.getInstance(Locale.ENGLISH)
-        val formatedDateString = DateFormat.format("dd-MMM-yyyy", calendar).toString()
 
-        val stringBuilder = StringBuilder("Summary for today ($formatedDateString)")
+        val stringBuilder = StringBuilder("Due tasks for incoming hours (${calendar.toddMMMyyyy()})")
         for (task in dueTasks) {
             stringBuilder.append("\n>$task")
+        }
+        return stringBuilder.toString()
+    }
+
+    private fun getSummaryString(tasks: List<DueTask>): String {
+        val calendar = Calendar.getInstance(Locale.ENGLISH)
+
+        val stringBuilder = StringBuilder("Summary for today (${calendar.toddMMMyyyy()})")
+        for (task in tasks) {
+            stringBuilder.append("\n>${task.name}")
         }
         return stringBuilder.toString()
     }

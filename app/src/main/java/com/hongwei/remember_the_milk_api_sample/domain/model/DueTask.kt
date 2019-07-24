@@ -1,6 +1,6 @@
 package com.hongwei.remember_the_milk_api_sample.domain.model
 
-import android.text.format.DateFormat
+import com.hongwei.remember_the_milk_api_sample.util.toddMMyyyy_HHmmss
 import java.util.*
 
 class DueTask(
@@ -11,6 +11,6 @@ class DueTask(
         val calendar = Calendar.getInstance()
         calendar.time = due
 
-        return "$name due: ${DateFormat.format("dd-MM-yyyy HH:mm:ss", calendar)}"
+        return "$name due: ${calendar.toddMMyyyy_HHmmss()}"
     }
 }
