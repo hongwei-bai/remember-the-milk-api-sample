@@ -42,6 +42,12 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
             val tasks = api.tasksGetByList(list)
 
             for (task in tasks) {
+                if ((task.completed != null && task.completed < now)
+                    || (task.deleted != null && task.deleted < now)
+                ) {
+                    continue
+                }
+
                 task.due?.let { taskDueDate ->
                     if (taskDueDate.after(now) && taskDueDate.before(tomorrow)) {
                         Log.i(TAG, "[TODAY]task: ${task.name}, due: ${task.due}")
