@@ -14,16 +14,23 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.due-task.usecase"
     }
 
-    fun execute(listener: (p: Float) -> Unit = {}): List<DueTask> {
+    fun execute(progressNotify: (p: Float) -> Unit = {}): List<DueTask> {
         val authToken = dataSource.retriveToken()
+        progressNotify.invoke(0.03f)
         Log.i(TAG, "authToken: $authToken")
         val api = RtmApi(dataSource.apiKey, dataSource.sharedSecret, authToken)
-        listener.invoke(0.1f)
+        progressNotify.invoke(0.06f)
 
         val lists = api.listsGetList()
-        listener.invoke(0.2f)
+        progressNotify.invoke(0.1f)
         val dueTaskList = mutableListOf<DueTask>()
+
+        var i = 0
         for (list in lists) {
+            val listProgress = 0.1f + 0.9f * i / lists.size
+            val listProgressNt = 0.1f + 0.9f * (i + 1) / lists.size
+            progressNotify.invoke(listProgress)
+
 //            val tasksInList = api.tasksGetByList(list)
 //            count += tasksInList.size
 //            Log.i(TAG, "list: ${list.name}, size: ${tasksInList.size}")
@@ -34,7 +41,11 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
 
             val tasks = api.tasksGetByList(list)
 
+            var j = 0
             for (task in tasks) {
+                val taskProgress = listProgress + (listProgressNt - listProgress) * j / tasks.size
+                progressNotify.invoke(taskProgress)
+                
                 if ((task.completed != null && task.completed < now())
                         || (task.deleted != null && task.deleted < now())
                 ) {
@@ -47,7 +58,9 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
                         dueTaskList.add(DueTask(task.name, task.due))
                     }
                 }
+                j++
             }
+            i++
         }
         Log.i(TAG, "-- end --")
         return dueTaskList

@@ -15,19 +15,24 @@ class GetTodayTasksUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.due-task.usecase"
     }
 
-    fun execute(): List<DueTask> {
+    fun execute(progressNotify: (p: Float) -> Unit = {}): List<DueTask> {
         val authToken = dataSource.retriveToken()
+        progressNotify.invoke(0.03f)
+
         Log.i(TAG, "authToken: $authToken")
         val api = RtmApi(dataSource.apiKey, dataSource.sharedSecret, authToken)
-
-//        Log.i(TAG, "yesterday: $yesterday")
-//        Log.i(TAG, "today: $today")
-//        Log.i(TAG, "today0: $today0")
-//        Log.i(TAG, "tomorrow0: $tomorrow0")
+        progressNotify.invoke(0.06f)
 
         val lists = api.listsGetList()
+        progressNotify.invoke(0.1f)
+
         val dueTaskList = mutableListOf<DueTask>()
+
+        var i = 0
         for (list in lists) {
+            val listProgress = 0.1f + 0.9f * i / lists.size
+            val listProgressNt = 0.1f + 0.9f * (i + 1) / lists.size
+            progressNotify.invoke(listProgress)
 //            val tasksInList = api.tasksGetByList(list)
 //            count += tasksInList.size
 //            Log.i(TAG, "list: ${list.name}, size: ${tasksInList.size}")
@@ -38,9 +43,13 @@ class GetTodayTasksUseCase @Inject constructor(val dataSource: DataSource) {
 
             val tasks = api.tasksGetByList(list)
 
+            var j = 0
             for (task in tasks) {
+                val taskProgress = listProgress + (listProgressNt - listProgress) * j / tasks.size
+                progressNotify.invoke(taskProgress)
+
                 if ((task.completed != null && task.completed < now())
-                    || (task.deleted != null && task.deleted < now())
+                        || (task.deleted != null && task.deleted < now())
                 ) {
                     continue
                 }
@@ -51,7 +60,9 @@ class GetTodayTasksUseCase @Inject constructor(val dataSource: DataSource) {
                         dueTaskList.add(DueTask(task.name, task.due))
                     }
                 }
+                j++
             }
+            i++
         }
         Log.i(TAG, "-- end --")
         return dueTaskList

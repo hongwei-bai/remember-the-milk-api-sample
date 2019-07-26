@@ -132,7 +132,9 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         var todayTasks: List<DueTask> = emptyList()
 
         runBlocking(Dispatchers.IO) {
-            todayTasks = getTodayTasksUseCase.execute()
+            todayTasks = getTodayTasksUseCase.execute(progressNotify = { progress ->
+                setProgress(ProgressMilestone.SUMMARY_TODAY, progress)
+            })
         }
 
         val summary = getSummaryString(todayTasks)
@@ -147,7 +149,9 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         var dueTasks: List<DueTask> = emptyList()
 
         runBlocking(Dispatchers.IO) {
-            dueTasks = getDueTasksUseCase.execute()
+            dueTasks = getDueTasksUseCase.execute(progressNotify = { progress ->
+                setProgress(ProgressMilestone.DUE_TASK, progress)
+            })
         }
 
         val summary = getDueSummaryString(dueTasks)
