@@ -1,6 +1,10 @@
 package com.hongwei.remember_the_milk_api_sample.presentation.main
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
+import com.hongwei.remember_the_milk_api_sample.ApiConfig
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Validation.LENGTH_API_KEY
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Validation.LENGTH_SHARED_SECRET
 import com.hongwei.remember_the_milk_api_sample.domain.usecase.SaveApiConfigUseCase
@@ -25,5 +29,10 @@ class ApiConfigViewModel @Inject constructor() : BaseViewModel() {
         saveApiCondigUseCase.execute(apiKey, secret)
 
         activity.finish()
+    }
+
+    fun openApiApplicationLink(context: Context) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(ApiConfig.Urls.API_APPLY_URL))
+        context.startActivity(browserIntent)
     }
 }

@@ -4,6 +4,8 @@ object ApiConfig {
     const val IS_LOGGING_ENABLED = true
 
     object Urls {
+        const val API_APPLY_URL = "https://www.rememberthemilk.com/services/api/keys.rtm"
+
         const val DOMAIN = "www.rememberthemilk.com"
         const val BASE = "https://" + DOMAIN
 

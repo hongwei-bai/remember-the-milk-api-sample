@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 
+
 class MainViewModel @Inject constructor() : BaseViewModel() {
     companion object {
         const val TAG = "rtm.main.viewmodel"
@@ -79,12 +80,12 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
             val validationUrl = deferred.await()
             if (validationUrl != null) {
                 val urlRequest = AuthenticationWebViewActivity.UrlRequest(
-                    title = "API key application",
-                    url = validationUrl
+                        title = "API key application",
+                        url = validationUrl
                 )
                 activity.startActivityForResult(
-                    AuthenticationWebViewActivity.newIntent(activity, urlRequest),
-                    REQUEST_CODE_AUTH
+                        AuthenticationWebViewActivity.newIntent(activity, urlRequest),
+                        REQUEST_CODE_AUTH
                 )
             }
         }
@@ -160,8 +161,8 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     fun applyForApiKey(activity: BaseActivity) {
         registerUseCase.getRegisterUrl().let { url ->
             val urlRequest = RegisterWebViewActivity.UrlRequest(
-                title = "API key application",
-                url = url
+                    title = "API key application",
+                    url = url
             )
             activity.startActivity(RegisterWebViewActivity.newIntent(activity, urlRequest))
         }

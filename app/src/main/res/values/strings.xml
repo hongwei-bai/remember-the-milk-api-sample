@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">remember-the-milk-api-sample</string>
+
+    <string name="link_rtm_api_apply"><u>No Remember The Milk API key? Apply</u></string>
 </resources>

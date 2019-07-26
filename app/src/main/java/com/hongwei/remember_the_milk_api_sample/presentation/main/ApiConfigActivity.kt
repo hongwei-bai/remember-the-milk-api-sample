@@ -36,6 +36,8 @@ class ApiConfigActivity : BaseActivity() {
         observeViewModel()
 
         btn_submit.setOnClickListener { viewModel.submit(this, apiKey = edit_apikey.text.toString(), secret = edit_secret.text.toString()) }
+
+        txt_link_api_register.setOnClickListener { viewModel.openApiApplicationLink(this) }
     }
 
     private fun watchTextChange() {
