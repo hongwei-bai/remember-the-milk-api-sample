@@ -60,7 +60,7 @@ class MainActivity : BaseActivity() {
                 txt_hello.text = "Authentication passed."
 
                 GlobalScope.async {
-//                    viewModel.registerTomorrowWakeup()
+                    viewModel.registerTomorrowWakeup()
 
                     viewModel.getTodayTask()
 
