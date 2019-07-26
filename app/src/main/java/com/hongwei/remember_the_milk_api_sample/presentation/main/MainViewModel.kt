@@ -48,6 +48,9 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     @Inject
     lateinit var checkApiConfigUseCase: CheckApiConfigUseCase
 
+    @Inject
+    lateinit var registerTomorrowWakeupAlarmUseCase: RegisterTomorrowWakeupAlarmUseCase
+
     val viewState: MutableLiveData<ViewState> = MutableLiveData()
 
     val authenticationState: MutableLiveData<Boolean> = MutableLiveData()
@@ -76,10 +79,13 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
             val validationUrl = deferred.await()
             if (validationUrl != null) {
                 val urlRequest = AuthenticationWebViewActivity.UrlRequest(
-                        title = "API key application",
-                        url = validationUrl
+                    title = "API key application",
+                    url = validationUrl
                 )
-                activity.startActivityForResult(AuthenticationWebViewActivity.newIntent(activity, urlRequest), REQUEST_CODE_AUTH)
+                activity.startActivityForResult(
+                    AuthenticationWebViewActivity.newIntent(activity, urlRequest),
+                    REQUEST_CODE_AUTH
+                )
             }
         }
     }
@@ -96,6 +102,10 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
         GlobalScope.launch(Dispatchers.IO) {
             getDocTasksUseCase.execute()
         }
+    }
+
+    fun registerTomorrowWakeup() {
+        registerTomorrowWakeupAlarmUseCase.execute()
     }
 
     fun getDueTask(): List<DueTask> {
@@ -150,8 +160,8 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     fun applyForApiKey(activity: BaseActivity) {
         registerUseCase.getRegisterUrl().let { url ->
             val urlRequest = RegisterWebViewActivity.UrlRequest(
-                    title = "API key application",
-                    url = url
+                title = "API key application",
+                url = url
             )
             activity.startActivity(RegisterWebViewActivity.newIntent(activity, urlRequest))
         }

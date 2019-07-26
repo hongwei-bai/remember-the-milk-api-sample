@@ -7,6 +7,7 @@ import android.util.Log
 import com.hongwei.remember_the_milk_api_sample.ApiConfig
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Alarm.Type.KEY_NAME
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Alarm.Type.KEY_TYPE
+import com.hongwei.remember_the_milk_api_sample.presentation.main.MainActivity
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -25,6 +26,10 @@ class AlarmReceiver : BroadcastReceiver() {
         when (type) {
             ApiConfig.Alarm.Type.TODO -> {
                 NotificationLauncher.notify(context!!, "1 New Milk TODO!", name!!)
+            }
+
+            ApiConfig.Alarm.Type.WAKE_UP -> {
+                context?.startActivity(MainActivity.intent(context))
             }
         }
     }

@@ -60,6 +60,8 @@ class MainActivity : BaseActivity() {
                 txt_hello.text = "Authentication passed."
 
                 GlobalScope.async {
+//                    viewModel.registerTomorrowWakeup()
+
                     viewModel.getTodayTask()
 
                     val dueTasks = viewModel.getDueTask()
@@ -86,10 +88,10 @@ class MainActivity : BaseActivity() {
 
     override fun inject() {
         DaggerActivityComponent.builder()
-                .applicationComponent(getAppComponent())
-                .activityModule(ActivityModule(this))
-                .build()
-                .inject(this)
+            .applicationComponent(getAppComponent())
+            .activityModule(ActivityModule(this))
+            .build()
+            .inject(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
