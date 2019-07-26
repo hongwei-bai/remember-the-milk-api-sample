@@ -14,12 +14,14 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
         const val TAG = "rtm.due-task.usecase"
     }
 
-    fun execute(): List<DueTask> {
+    fun execute(listener: (p: Float) -> Unit = {}): List<DueTask> {
         val authToken = dataSource.retriveToken()
         Log.i(TAG, "authToken: $authToken")
         val api = RtmApi(dataSource.apiKey, dataSource.sharedSecret, authToken)
+        listener.invoke(0.1f)
 
         val lists = api.listsGetList()
+        listener.invoke(0.2f)
         val dueTaskList = mutableListOf<DueTask>()
         for (list in lists) {
 //            val tasksInList = api.tasksGetByList(list)
@@ -34,7 +36,7 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
 
             for (task in tasks) {
                 if ((task.completed != null && task.completed < now())
-                    || (task.deleted != null && task.deleted < now())
+                        || (task.deleted != null && task.deleted < now())
                 ) {
                     continue
                 }

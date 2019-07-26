@@ -26,7 +26,7 @@ class ApiConfigViewModel @Inject constructor() : BaseViewModel() {
     }
 
     fun submit(activity: ApiConfigActivity, apiKey: String, secret: String) {
-        saveApiCondigUseCase.execute(apiKey, secret)
+        saveApiCondigUseCase.execute(apiKey.trim(), secret.trim())
 
         activity.finish()
     }

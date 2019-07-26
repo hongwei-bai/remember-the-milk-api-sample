@@ -1,3 +1,7 @@
 <resources>
     <dimen name="text_medium">17sp</dimen>
+
+    <dimen name="margin_left">16dp</dimen>
+
+    <dimen name="drawing_width">4dp</dimen>
 </resources>

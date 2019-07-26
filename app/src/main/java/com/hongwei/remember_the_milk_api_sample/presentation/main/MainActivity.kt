@@ -39,7 +39,9 @@ class MainActivity : BaseActivity() {
 
         observeViewModel()
 
+        viewModel.setProgress(MainViewModel.ProgressMilestone.ZERO)
         val bl = viewModel.checkApiConfigExist()
+        viewModel.setProgress(MainViewModel.ProgressMilestone.AUTH, 0.25f)
         Log.i(TAG, "checkApiConfigExist: $bl")
         if (bl) {
             auth()
@@ -50,26 +52,43 @@ class MainActivity : BaseActivity() {
 
     private fun auth() {
         if (!viewModel.checkAuthenticationStatus()) {
+            viewModel.setProgress(MainViewModel.ProgressMilestone.AUTH, 0.5f)
             viewModel.authenticate(this)
+            viewModel.setProgress(MainViewModel.ProgressMilestone.AUTH, 0.75f)
         }
     }
 
     private fun observeViewModel() {
+        viewModel.progressState.observe(this, Observer {
+            view_drawing.progress = it
+            view_drawing.invalidate()
+        })
+
         viewModel.authenticationState.observe(this, Observer { pass ->
             if (pass) {
+                viewModel.setProgress(MainViewModel.ProgressMilestone.AUTH, 1f)
                 txt_hello.text = "Authentication passed."
 
                 GlobalScope.async {
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.SUMMARY_TODAY, 0.1f)
                     viewModel.registerTomorrowWakeup()
-
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.SUMMARY_TODAY, 0.5f)
                     viewModel.getTodayTask()
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.SUMMARY_TODAY, 1f)
 
                     val dueTasks = viewModel.getDueTask()
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.DUE_TASK, 1f)
 
                     viewModel.setAlarms(dueTasks)
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.NEXT_ALARM, 0.5f)
 
                     viewModel.getNextAlarm()
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.NEXT_ALARM, 1f)
+                    kotlinx.coroutines.delay(100)
+                    viewModel.setProgress(MainViewModel.ProgressMilestone.ALL_DONE)
                 }
+            } else {
+                txt_hello.text = "Authentication failure."
             }
         })
 
@@ -88,10 +107,10 @@ class MainActivity : BaseActivity() {
 
     override fun inject() {
         DaggerActivityComponent.builder()
-            .applicationComponent(getAppComponent())
-            .activityModule(ActivityModule(this))
-            .build()
-            .inject(this)
+                .applicationComponent(getAppComponent())
+                .activityModule(ActivityModule(this))
+                .build()
+                .inject(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

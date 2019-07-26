@@ -7,11 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".presentation.main.MainActivity">
 
+    <com.hongwei.remember_the_milk_api_sample.presentation.main.DrawingView
+        android:id="@+id/view_drawing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
         android:id="@+id/txt_hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="Authenticating..."
         app:layout_constraintBottom_toTopOf="@+id/txt_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +28,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:paddingEnd="16dp"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/margin_left"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@id/txt_due_summary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_hello"/>
+        app:layout_constraintTop_toBottomOf="@id/txt_hello"
+        tools:text="Today's summary"/>
 
     <TextView
         android:id="@+id/txt_due_summary"
@@ -35,11 +41,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:paddingEnd="16dp"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/margin_left"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@id/txt_next_alarm"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_summary"/>
+        app:layout_constraintTop_toBottomOf="@id/txt_summary"
+        tools:text="Incoming due tasks"/>
 
     <TextView
         android:id="@+id/txt_next_alarm"
@@ -47,10 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:paddingEnd="16dp"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/margin_left"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_due_summary"/>
+        app:layout_constraintTop_toBottomOf="@id/txt_due_summary"
+        tools:text="Next alarm"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
