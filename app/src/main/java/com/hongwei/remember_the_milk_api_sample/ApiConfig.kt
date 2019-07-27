@@ -40,18 +40,16 @@ object ApiConfig {
 
     object Timing {
         const val WAKE_UP_HOUR = 7
+    }
 
-        const val SUMMARY_HOUR = 10
+    enum class AlarmType(val id: String, val requestCode: Int) {
+        WAKE_UP("wakeup", 440),
+        SUMMARY("summary", 441),
+        TODO("todo", 442)
     }
 
     object Alarm {
-        object Type {
-            const val KEY_TYPE = "alarm.type"
-            const val KEY_NAME = "alarm.name"
-
-            const val WAKE_UP = "wakeup"
-            const val SUMMARY = "summary"
-            const val TODO = "todo"
-        }
+        const val KEY_TYPE = "alarm.type"
+        const val KEY_NAME = "alarm.name"
     }
 }

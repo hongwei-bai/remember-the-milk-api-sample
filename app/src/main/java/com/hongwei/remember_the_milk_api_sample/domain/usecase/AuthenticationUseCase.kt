@@ -13,7 +13,6 @@ class AuthenticationUseCase @Inject constructor(val dataSource: DataSource) {
     }
 
     fun prepare(): String? {
-        Log.i("aaaa", "dataSource: $dataSource")
         Log.i(TAG, "RtmApiAuthenticator: apiKey: ${dataSource.apiKey}, sharedSecret: ${dataSource.sharedSecret}")
         dataSource.authenticator = RtmApiAuthenticator(dataSource.apiKey, dataSource.sharedSecret)
 

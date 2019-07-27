@@ -10,7 +10,7 @@ import javax.inject.Inject
 class SetAlarmUseCase @Inject constructor(@AppContext val context: Context) {
     fun execute(dueTasks: List<DueTask>) {
         for (task in dueTasks) {
-            AlarmLauncher.addAlarm(context, task.due, ApiConfig.Alarm.Type.TODO, task.name)
+            AlarmLauncher.addAlarm(context, task.due, ApiConfig.AlarmType.TODO, task.name)
         }
     }
 }

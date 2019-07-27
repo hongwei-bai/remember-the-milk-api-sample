@@ -3,4 +3,20 @@
     <color name="colorPrimary">#fff</color>
     <color name="colorPrimaryDark">#231f1e</color>
     <color name="colorAccent">#0c67c1</color>
+
+    <color name="primary_blue">#0060bf</color>
+    <color name="darker_blue">#004e99</color>
+    <color name="light_blue">#349aff</color>
+    <color name="light_green">#73a340</color>
+    <color name="floating_button_orange">#dc4437</color>
+    <color name="overdue_orange">#d84a00</color>
+    <color name="lightest_blue">#d7e7f6</color>
+    <color name="Menu_text_grey">#666666</color>
+    <color name="drawer_icon_blue">#3a84cd</color>
+    <color name="purple">#5a28bd</color>
+    <color name="light_blue_floating">#4286f5</color>
+    <color name="priority_high_orange">#f55500</color>
+    <color name="priority_high_floating_orange">#fb8c00</color>
+    <color name="priority_medium_blue">#0060bf</color>
+    <color name="priority_low_blue">#349aff</color>
 </resources>

@@ -31,10 +31,6 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
             val listProgressNt = 0.1f + 0.9f * (i + 1) / lists.size
             progressNotify.invoke(listProgress)
 
-//            val tasksInList = api.tasksGetByList(list)
-//            count += tasksInList.size
-//            Log.i(TAG, "list: ${list.name}, size: ${tasksInList.size}")
-//            Log.i(TAG, "list: ${list.name}")
             if (list.isArchived || list.isDeleted || list.name == LIST_ALL_TASKS) {
                 continue
             }

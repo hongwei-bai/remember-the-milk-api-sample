@@ -10,6 +10,6 @@ import javax.inject.Inject
 class RegisterTomorrowWakeupAlarmUseCase @Inject constructor(@AppContext val context: Context) {
     fun execute() {
         val tomorrow7am = tomorrow(7)
-        AlarmLauncher.addAlarm(context, tomorrow7am, ApiConfig.Alarm.Type.WAKE_UP, "Morning wake up")
+        AlarmLauncher.addAlarm(context, tomorrow7am, ApiConfig.AlarmType.WAKE_UP, "Morning wake up")
     }
 }

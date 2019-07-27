@@ -21,10 +21,6 @@ class GetDocTasksUseCase @Inject constructor(val dataSource: DataSource) {
         val lists = api.listsGetList()
         Log.i(TAG, "listsGetList use: ${System.currentTimeMillis() - t0}")
         for (list in lists) {
-//            val tasksInList = api.tasksGetByList(list)
-//            count += tasksInList.size
-//            Log.i(TAG, "list: ${list.name}, size: ${tasksInList.size}")
-
             if (list.name == TAG_DOC) {
                 val t1 = System.currentTimeMillis()
                 val tasks = api.tasksGetByList(list)
