@@ -41,11 +41,18 @@ class GetDueTasksUseCase @Inject constructor(val dataSource: DataSource) {
             for (task in tasks) {
                 val taskProgress = listProgress + (listProgressNt - listProgress) * j / tasks.size
                 progressNotify.invoke(taskProgress)
-                
+
+                Log.i("aaaa", "task: ${task.name}, due: ${task.due}, recurrence: ${task.recurrence}")
+
                 if ((task.completed != null && task.completed < now())
-                        || (task.deleted != null && task.deleted < now())
+                    || (task.deleted != null && task.deleted < now())
                 ) {
                     continue
+                }
+
+                var dueRecurrence = false
+                if (task.recurrence != null) {
+
                 }
 
                 task.due?.let { taskDueDate ->
