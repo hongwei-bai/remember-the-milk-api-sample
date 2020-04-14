@@ -48,6 +48,9 @@ class MainActivity : BaseActivity() {
         } else {
             startActivityForResult(ApiConfigActivity.intent(this), REQUEST_CODE_APICONFIG)
         }
+
+        // test
+        viewModel.uploadPedometerUseCase.updateLocalSteps()
     }
 
     private fun auth() {

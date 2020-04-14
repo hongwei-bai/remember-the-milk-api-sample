@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.hongwei.remember_the_milk_api_sample.ApiConfig
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Validation.LENGTH_API_KEY
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Validation.LENGTH_SHARED_SECRET
-import com.hongwei.remember_the_milk_api_sample.domain.usecase.SaveApiConfigUseCase
+import com.hongwei.remember_the_milk_api_sample.domain.todo.usecase.SaveApiConfigUseCase
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseViewModel
 import javax.inject.Inject
 

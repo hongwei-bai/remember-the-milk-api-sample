@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.hongwei.remember_the_milk_api_sample.ApiConfig.Constants.REQUEST_CODE_AUTH
 import com.hongwei.remember_the_milk_api_sample.domain.model.DueTask
-import com.hongwei.remember_the_milk_api_sample.domain.usecase.*
+import com.hongwei.remember_the_milk_api_sample.domain.pedometer.usecase.UploadPedometerUseCase
+import com.hongwei.remember_the_milk_api_sample.domain.todo.usecase.*
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseActivity
 import com.hongwei.remember_the_milk_api_sample.presentation.base.BaseViewModel
 import com.hongwei.remember_the_milk_api_sample.presentation.model.ViewState
@@ -48,6 +49,9 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     @Inject
     lateinit var registerTomorrowWakeupAlarmUseCase: RegisterTomorrowWakeupAlarmUseCase
+
+    @Inject
+    lateinit var uploadPedometerUseCase: UploadPedometerUseCase
 
     val viewState: MutableLiveData<ViewState> = MutableLiveData()
 

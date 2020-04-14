@@ -14,11 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DataSource @Inject constructor(@AppContext context: Context) {
-    private var sharedPreferences: SharedPreferences
-
-    init {
-        sharedPreferences = context.getSharedPreferences("remember-the-milk-sample", Context.MODE_PRIVATE)
-    }
+    private var sharedPreferences: SharedPreferences = context.getSharedPreferences("remember-the-milk-sample", Context.MODE_PRIVATE)
 
     var authenticator: RtmApiAuthenticator? = null
 
