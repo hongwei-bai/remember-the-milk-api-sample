@@ -7,7 +7,7 @@ import java.util.*
 
 @Entity(tableName = "pedometerDay", indices = [Index(value = ["dayDiffFrom1970"], unique = true)])
 data class PedometerDay(
-        @PrimaryKey(autoGenerate = true) val id: Int,
+        @PrimaryKey(autoGenerate = true) var id: Int,
         val dayDiffFrom1970: Long, // days from 1970-1-1
         val steps: Long
 ) {

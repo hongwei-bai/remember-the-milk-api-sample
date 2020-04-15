@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
             startActivityForResult(ApiConfigActivity.intent(this), REQUEST_CODE_APICONFIG)
         }
 
-        // test
+        // pedometer - update
         viewModel.uploadPedometerUseCase.updateLocalSteps()
     }
 

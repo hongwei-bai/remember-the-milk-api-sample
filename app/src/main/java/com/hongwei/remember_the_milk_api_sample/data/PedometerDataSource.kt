@@ -10,10 +10,7 @@ import com.hongwei.remember_the_milk_api_sample.data.local.entity.AppDatabase
 import com.hongwei.remember_the_milk_api_sample.data.local.entity.PedometerDay
 import com.hongwei.remember_the_milk_api_sample.data.local.entity.PedometerDayDao
 import com.hongwei.remember_the_milk_api_sample.injection.annotations.AppContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,15 +19,20 @@ import javax.inject.Singleton
 class PedometerDataSource @Inject constructor(@AppContext private val context: Context) {
     companion object {
         private const val TAG = "rtm.pedo"
+
+        const val UNINITIALIZED = -1L
     }
 
     private val pedometerDayDao: PedometerDayDao = AppDatabase.getInstance(context).pedometerDayDao()
+    private var oneTimeSensorRequireListener: OneTimeSensorRequireListener? = null
 
     suspend fun test() {
-        GlobalScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             val list = pedometerDayDao.getPedometerDays()
+            var previous = 0L
             list.forEach {
-                Log.d(TAG, "list all: $it")
+                Log.d(TAG, "list all: $it, diff: ${it.steps - previous}")
+                previous = it.steps
             }
         }
     }
@@ -48,13 +50,12 @@ class PedometerDataSource @Inject constructor(@AppContext private val context: C
                 steps = steps
         )
 
-        GlobalScope.launch(Dispatchers.IO) {
-            if (pedometerDayDao.getPedometerDay(dayDiff) != null) {
-                pedometerDayDao.update(record)
-            } else {
-                pedometerDayDao.insert(record)
-            }
-            Log.d(TAG, "saveStepCounter dayDiff: $dayDiff, steps: $steps")
+        withContext(Dispatchers.IO) {
+            pedometerDayDao.getPedometerDay(dayDiff)?.let {
+                pedometerDayDao.update(record.apply { id = it.id })
+                Log.d(TAG, "saveStepCounter dayDiff: $dayDiff exists, update id: ${it.id}")
+            } ?: pedometerDayDao.insert(record)
+            Log.d(TAG, "saveStepCounter dayDiff: $dayDiff, insert steps: $steps")
         }
     }
 
@@ -62,25 +63,30 @@ class PedometerDataSource @Inject constructor(@AppContext private val context: C
         return suspendCancellableCoroutine { continuation ->
             val manager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             val stepSensor = manager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+            oneTimeSensorRequireListener = OneTimeSensorRequireListener(continuation) {
+                manager.unregisterListener(oneTimeSensorRequireListener)
+                oneTimeSensorRequireListener = null
+            }
             stepSensor?.let {
-                manager.registerListener(object : SensorEventListener {
-                    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-                        Log.d(TAG, "onAccuracyChanged, sensor: $sensor, accuracy: $accuracy")
-                    }
+                manager.registerListener(oneTimeSensorRequireListener, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            } ?: continuation.resume(UNINITIALIZED, {})
+        }
 
-                    override fun onSensorChanged(event: SensorEvent) {
-                        Log.d(TAG, "onSensorChanged, event: $event")
+    }
 
-                        if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
-                            Log.d(TAG, "onSensorChanged: current step count：${event.values[0]}")
-                            continuation.resume(event.values[0].toLong(), {})
-                        } else {
-                            continuation.resume(-1, {})
-                        }
-                    }
+    private class OneTimeSensorRequireListener(private val continuation: CancellableContinuation<Long>, private val unregisterAction: () -> Unit) : SensorEventListener {
+        override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+            Log.d(TAG, "onAccuracyChanged, sensor: $sensor, accuracy: $accuracy")
+        }
 
-                }, stepSensor, SensorManager.SENSOR_DELAY_NORMAL)
-            } ?: continuation.resume(-2, {})
+        override fun onSensorChanged(event: SensorEvent) {
+            Log.d(TAG, "onSensorChanged, event: $event")
+
+            if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+                Log.d(TAG, "onSensorChanged: current step count：${event.values[0]}")
+                continuation.resume(event.values[0].toLong(), {})
+                unregisterAction.invoke()
+            }
         }
     }
 }
